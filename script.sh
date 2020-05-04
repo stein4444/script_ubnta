@@ -1,18 +1,18 @@
 #! /bin/bash
 
-
-
 if [[ 'grep -w 'NAME="Ubuntu"' /etc/os-release' ]]; then
     read -r -p "Enter ip addr:" ipaddr
     read -r -p "Enter your gateway:" gateway
-    
-   #sudo netplan apply
-    #sudo netplan --debug apply
-    sed -i 's/dhcp4: yes/dhcp4: no/g' /etc/netplan/50-cloud-init.yaml
-    echo "           addresses: [$ipaddr/24]" >> /etc/netplan/50-cloud-init.yaml
-    echo "           gateway4: $gateway" >> /etc/netplan/50-cloud-init.yaml
-    echo "           nameservers:" >> /etc/netplan/50-cloud-init.yaml
-    echo "             addresses: [8.8.8.8,8.8.4.4]" >> /etc/netplan/50-cloud-init.yaml
+    sudo sh -c "echo 'network:' > /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '  version: 2' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '  renderer: networkd' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '  ethernets:' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '    enp0s3:' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '      dhcp4: no' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '      addresses: [$ipaddr/24]' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '      gateway4: $gateway' >> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '      nameservers:'>> /etc/netplan/50-cloud-init.yaml"
+    sudo sh -c "echo '        addresses: [8.8.8.8,8.8.4.4]' >> /etc/netplan/50-cloud-init.yaml"
     sudo netplan apply
     
 else
